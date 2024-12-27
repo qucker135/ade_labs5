@@ -4,6 +4,7 @@ import pandas as pd
 from scipy.stats import moment
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 PATH = os.path.join('datasets', 'Folds5x2_pp.xlsx')
@@ -63,6 +64,8 @@ if __name__ == "__main__":
     # Linear regression (whole dataset)
     X = df[['AT', 'V', 'AP', 'RH']]
     y = df['PE']
+    scaler = StandardScaler()
+    X = pd.DataFrame(scaler.fit_transform(X), columns=['AT', 'V', 'AP', 'RH'])
     reg = LinearRegression().fit(X, y)
     print("Linear regression coefficients (whole dataset):")
     print(f"Intercept: {reg.intercept_}")
@@ -100,6 +103,11 @@ if __name__ == "__main__":
     X = df[['AT', 'V', 'AP', 'RH']]
     y = df['PE']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=64)
+
+    # Standardize data
+    scaler = StandardScaler()
+    X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=X.columns)
+    X_test = pd.DataFrame(scaler.transform(X_test), columns=X.columns)
 
     # Linear regression (train-test split)
     reg = LinearRegression().fit(X_train, y_train)
@@ -153,6 +161,11 @@ if __name__ == "__main__":
     X = df[['AT', 'V', 'AP', 'RH']]
     y = df['PE']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=64)
+
+    # Standardize data
+    scaler = StandardScaler()
+    X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=X.columns)
+    X_test = pd.DataFrame(scaler.transform(X_test), columns=X.columns)
 
     # Linear regression (train-test split, noisy PE)
     reg = LinearRegression().fit(X_train, y_train)
